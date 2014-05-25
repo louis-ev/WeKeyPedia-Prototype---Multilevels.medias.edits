@@ -4,6 +4,33 @@ function hyphenate(str) {
 }
 var toc = $('.rubrique .col3');
 
+/******* origine : jqueryui-easing script, BSD license  ******/
+
+$.extend($.easing,
+{
+    def: 'easeOutQuad',
+    easeInOutQuint: function (x, t, b, c, d) {
+        if ((t/=d/2) < 1) return c/2*t*t*t*t*t + b;
+        return c/2*((t-=2)*t*t*t*t + 2) + b;
+    }
+
+});
+/* universal delayer from stackoverflow */
+var waitForFinalEvent = (function () {
+  var timers = {};
+  return function (callback, ms, uniqueId) {
+    if (!uniqueId) {
+      uniqueId = "Don't call this twice without a uniqueId";
+    }
+    if (timers[uniqueId]) {
+      clearTimeout (timers[uniqueId]);
+    }
+    timers[uniqueId] = setTimeout(callback, ms);
+  };
+})();
+
+
+
 
 $(document).ready(
 
@@ -19,7 +46,9 @@ $(document).ready(
 		$('body').addClass("niveau0");
 		$('#toolbar').css("opacity", 1);
 		$('.container').css("opacity", 1);
-		$('.container').css("width", "300vw");
+		$('.container').css("width", "290vw");
+		setTimeout(	function() { movecol( "niveau" + checkniveau(0) ); }, 1400 );
+
 
 /*
 		$("#paperclipicon").click ( {
@@ -34,11 +63,23 @@ $(document).ready(
 		// gogo colonne cliquées
 		var movecol = function (gotoniveau) {
 			console.log(gotoniveau);
+
+			// l'objectif est de centrer sur la colonne
+			// il faut donc trouver le scrollLeft qui prendra en compte la largeur de la fenêtre et la position du centre, soit
+
+			var posCenterCol = $('.colonne[data-col=' + gotoniveau + ']').offset().left + ($('.colonne[data-col=' + gotoniveau + ']').width() / 2);
+
+			var scrollLeftValue = $('#masque').scrollLeft() + posCenterCol - $(window).width() / 2;
+
+			console.log( "scrollLeftValue : " + scrollLeftValue);
+			//var scrollLeftValue = $('#masque').scrollLeft() + $('.colonne[data-col=' + gotoniveau + ']').offset().left - 0.05*$(window).width();
+
 			$('#masque').animate({
-				scrollLeft: $('#masque').scrollLeft() + $('.colonne[data-col=' + gotoniveau + ']').offset().left
-			}, { duration: 400, queue: false });
+				scrollLeft: scrollLeftValue
+			}, { duration: 800, queue: false, ease: "easeOutQuad" });
 			$('body').removeClass("niveau0 niveau1 niveau2");
 			$('body').addClass(gotoniveau);
+
 		};
 
 		// si clique sur titre (id de l'élément à scroller)
@@ -46,7 +87,7 @@ $(document).ready(
 			// scroll du haut
 			$('#masque').animate({
 				scrollTop: $('#masque').scrollTop() + selector.offset().top - 80
-			}, { duration: 400, queue: false });
+			}, { duration: 800, queue: false });
 		};
 
 		$('.colonne p, .colonne h4').wrap('<div class="bloctext"></div>');
@@ -113,6 +154,12 @@ $(document).ready(
 			return level;
 		}
 
+		$(window).resize(function(){
+		    waitForFinalEvent(function(){
+				setTimeout(	function() { movecol( "niveau" + checkniveau(niveau) ); }, 1400 );
+		    }, 500, "resize");
+
+		});
 
 	}
 );

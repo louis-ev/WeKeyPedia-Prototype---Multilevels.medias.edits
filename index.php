@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-    <title>wekeypedia</title>
+    <title>Wekeypedia prototype</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="css/normalize.min.css" type="text/css">
@@ -14,73 +14,79 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.6.3/less.min.js" type="text/javascript"></script>
 
     <script src="js/vendor/modernizr-2.6.2.min.js" type="text/javascript"></script>
-<script type="text/javascript" src="//use.typekit.net/ckz6zna.js"></script>
-<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+	<script type="text/javascript" src="//use.typekit.net/fem5vgb.js"></script>
+	<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 </head>
 
 <body>
 
-	<div class="fixed">
+	<div class="toolbarcontainer">
+		<div class="fixed">
        	 	<div class="" id="toolbar">
-				<div id="bloclogo">
-					<img src="img/logo-wekeypedzia-06.png" alt="logo-wekeypedzia-06" id="logo" />
-					<h1>wekeypedia</h1>
-				</div>
+					<div id="bloclogo">
+						<img src="img/logo-13.png" alt="logo-wekeypedzia-06" id="logo" />
+						<h1>Wekeypedia</h1>
+					</div>
 
-				<div id="titrearticle">
-					<h1>Ant</h1>
+					<div id="titrearticle">
+						<h1>Ant</h1>
 
-				</div>
+					</div>
 
-				<div class="" style="float: right; margin-top: 5px;">
-					<div id="icons" class="glyphicons">
+					<div class="" style="float: right; margin-top: 5px;">
+						<div class="icons glyphicons">
+	<!--
+							<ul>
+								<li class="glyphicon-map-marker"></li>
+								<li></li>
+								<li></li>
+								<li></li>
+								<li></li>
+								<li></li>
+							</ul>
+	-->
+
+							<img src="img/glyphicons_072_bookmark.png" alt="glyphicons_072_bookmark" width="" height="" />
+
+							<span>|</span>
+
+						</div>
+
+
+						<div id="search">
+							<h2>
+								___
+							</h2>
+						</div>
+
+						<div class="icons glyphicons">
 <!--
-						<ul>
-							<li class="glyphicon-map-marker"></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-						</ul>
+							<img src="img/glyphicons_008_film.png" alt="glyphicons_008_film" width="" height="" />
+							<img src="img/glyphicons_242_google_maps.png" alt="glyphicons_242_google_maps" width="" height="" />
+							<img src="img/glyphicons_321_gamepad.png" alt="glyphicons_321_gamepad" width="" height="" />
+							<img src="img/glyphicons_168_ear_plugs.png" alt="glyphicons_168_ear_plugs" width="" height="" />
+							<img src="img/glyphicons_062_paperclip.png" alt="glyphicons_062_paperclip" width="" height="" id="paperclipicon"/>
 -->
 
-						<img src="img/glyphicons_072_bookmark.png" alt="glyphicons_072_bookmark" width="" height="" />
+							<img src="img/glyphicons_003_user.png" alt="glyphicons_003_user.png" width="" height="" />
 
-					<span>|</span>
-
-						<img src="img/glyphicons_008_film.png" alt="glyphicons_008_film" width="" height="" />
-						<img src="img/glyphicons_242_google_maps.png" alt="glyphicons_242_google_maps" width="" height="" />
-						<img src="img/glyphicons_321_gamepad.png" alt="glyphicons_321_gamepad" width="" height="" />
-						<img src="img/glyphicons_168_ear_plugs.png" alt="glyphicons_168_ear_plugs" width="" height="" />
-						<img src="img/glyphicons_062_paperclip.png" alt="glyphicons_062_paperclip" width="" height="" id="paperclipicon"/>
+						</div>
 					</div>
-					<div id="search">
-						<h2>
-							Recherche
-						</h2>
-					</div>
-				</div>
-       	 	</div>
+	       	 	</div>
        	 	<div id="toolbar-fond">
-	       	 	<div class="colonne facile"></div>
-	       	 	<div class="colonne moyen"></div>
-	       	 	<div class="colonne complex"></div>
-       	 	</div>
-<!--
-       	 	<div class="flc" id="flcgauche"></div>
-       	 	<div class="flc" id="flcdroite"></div>
--->
+		       	 	<div class="colonne facile"></div>
+		       	 	<div class="colonne moyen"></div>
+		       	 	<div class="colonne complex"></div>
+	       	 	</div>
    	 		<div id="popup">
-				<div class="content">
-					<img src="img/glyphicons_062_paperclip.png" alt="glyphicons_062_paperclip" width="" height="" class="pc"/>
-					<img src="img/leaf-ant.jpg" alt="leaf-ant" width="" height="" />
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi, sunt, aperiam, nihil reiciendis similique ex debitis nostrum enim minus dignissimos illum quasi eos impedit. Expedita, quam atque esse molestias temporibus.</p>
+					<div class="content">
+						<img src="img/glyphicons_062_paperclip.png" alt="glyphicons_062_paperclip" width="" height="" class="pc"/>
+						<img src="img/leaf-ant.jpg" alt="leaf-ant" width="" height="" />
+						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi, sunt, aperiam, nihil reiciendis similique ex debitis nostrum enim minus dignissimos illum quasi eos impedit. Expedita, quam atque esse molestias temporibus.</p>
+					</div>
 				</div>
-			</div>
-
 		</div>
-
+	</div>
 
     <div id="masque">
 	    <main class="container">
