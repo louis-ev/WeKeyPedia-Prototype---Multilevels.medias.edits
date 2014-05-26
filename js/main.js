@@ -67,16 +67,20 @@ $(document).ready(
 			// l'objectif est de centrer sur la colonne
 			// il faut donc trouver le scrollLeft qui prendra en compte la largeur de la fenêtre et la position du centre, soit
 
-			var posCenterCol = $('.colonne[data-col=' + gotoniveau + ']').offset().left + ($('.colonne[data-col=' + gotoniveau + ']').width() / 2);
+			var posCenterCol = $('.colonne[data-col=' + gotoniveau + ']').position().left + ($('.colonne[data-col=' + gotoniveau + ']').width() / 2);
 
 			var scrollLeftValue = $('#masque').scrollLeft() + posCenterCol - $(window).width() / 2;
 
-			console.log( "scrollLeftValue : " + scrollLeftValue);
+			// scrollLeftValue pour scrollLeft. Mais translateX du container dans le masque est plus fluide
+			//console.log( "scrollLeftValue : " + scrollLeftValue);
 			//var scrollLeftValue = $('#masque').scrollLeft() + $('.colonne[data-col=' + gotoniveau + ']').offset().left - 0.05*$(window).width();
 
-			$('#masque').animate({
-				scrollLeft: scrollLeftValue
-			}, { duration: 800, queue: false, ease: "easeOutQuad" });
+			// position de la colonne concernée dans l'espace
+			var moveColValue = posCenterCol - $(window).width() / 2;
+
+			// déplacement du container avec un translateX
+			$('#masque .container').transition({ x: -scrollLeftValue }, 800, "snap" );
+
 			$('body').removeClass("niveau0 niveau1 niveau2");
 			$('body').addClass(gotoniveau);
 
