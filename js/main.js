@@ -64,10 +64,11 @@ $(document).ready(
 		var movecol = function (gotoniveau) {
 			console.log(gotoniveau);
 
+			var newColonne = $('.colonne[data-col=' + gotoniveau + ']');
+
 			// l'objectif est de centrer sur la colonne
 			// il faut donc trouver le scrollLeft qui prendra en compte la largeur de la fenêtre et la position du centre, soit
-
-			var posCenterCol = $('.colonne[data-col=' + gotoniveau + ']').position().left + ($('.colonne[data-col=' + gotoniveau + ']').width() / 2);
+			var posCenterCol = newColonne.position().left + ($('.colonne[data-col=' + gotoniveau + ']').width() / 2);
 
 			var scrollLeftValue = $('#masque').scrollLeft() + posCenterCol - $(window).width() / 2;
 
@@ -79,8 +80,14 @@ $(document).ready(
 			var moveColValue = posCenterCol - $(window).width() / 2;
 
 			// déplacement du container avec un translateX
-			$('#masque .container').transition({ x: -scrollLeftValue }, 800, "snap" );
+			$('#masque .container').transition({
+				x: -scrollLeftValue,
+				duration : 800,
+				easing: "snap",
+			});
 
+			$(".colonne").addClass("peripherie");
+			$('.colonne[data-col=' + gotoniveau + ']').removeClass("peripherie");
 			$('body').removeClass("niveau0 niveau1 niveau2");
 			$('body').addClass(gotoniveau);
 

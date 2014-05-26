@@ -307,8 +307,9 @@ textarea {
 		.colonne {
 
 			flex: 1;
+			opacity: 1;
 			background-color: transparent !important;
-			.transition(background-color .5s .5s ease-out);
+			.transition(background-color .5s .5s ease-out, opacity .5s ease-out, );
 
 			.inside {
 
@@ -502,6 +503,16 @@ textarea {
 					background-color: transparent;
 				}
 			}
+
+			&.peripherie {
+				opacity: .4 !important;
+
+				&:hover {
+					opacity: 1 !important;
+
+				}
+			}
+
 
 			p {
 				width: 44%;
