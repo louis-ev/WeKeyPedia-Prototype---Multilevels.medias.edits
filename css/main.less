@@ -506,10 +506,20 @@ textarea {
 
 			&.peripherie {
 				opacity: .4 !important;
+				cursor: pointer;
 
 				&:hover {
 					opacity: 1 !important;
 
+					&.simple {
+						cursor: w-resize;
+					}
+					&.moyen {
+						cursor: e-resize;
+					}
+					&.complex {
+						cursor: e-resize;
+					}
 				}
 			}
 
@@ -558,12 +568,12 @@ textarea {
 			}
 
 			.border-left {
-				left: 0;
+				left: -30px;
 				top: 0;
 				cursor: w-resize;
 			}
 			.border-right {
-				right: 0;
+				right: -30px;
 				top: 0;
 				cursor: e-resize;
 			}
