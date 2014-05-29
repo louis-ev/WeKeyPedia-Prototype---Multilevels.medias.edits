@@ -11,7 +11,7 @@ textarea {
 }
 
 body {
-    font-size: 1rem;
+    font-size: 1em;
     line-height: 1.6;
 	font-family: "ff-tisa-web-pro", georgia, serif;
 }
@@ -91,6 +91,19 @@ textarea {
 	border-color: @ccomplex;
 }
 
+// apercu de map
+body {
+	transition: font-size 1s;
+}
+
+body.apercu {
+
+	font-size:.7em;
+
+
+
+}
+
 // contenu fixé en haut de page
 
 .toolbarcontainer {
@@ -151,6 +164,7 @@ textarea {
 					width: auto;
 					height: 100%;
 					padding-right: 10px;
+					display: none;
 				}
 
 				h1 {
@@ -208,7 +222,7 @@ textarea {
 			height: 100%;
 			position: absolute;
 			top: 0;
-			z-index:5;
+			z-index:-1;
 		}
 
 
@@ -260,7 +274,7 @@ textarea {
 			top: ~"calc( 100% + 5px)";
 			.transition ( top 1s);
 			background-color: #fff;
-			opacity: .5;
+			opacity: .0;
 
 			.content {
 				padding: 1em;
@@ -286,11 +300,11 @@ textarea {
 	height:100vh;
 	position: absolute;
 	padding-top: 65px;
+	background-color: #f6f6f6;
 
 	.container {
 		position: absolute;
 		width: 100vw;
-		background-color: #f6f6f6;
 		margin: auto;
 		padding-left: 150px;
 		padding-right: 150px;
@@ -348,7 +362,13 @@ textarea {
 						margin-top:5px;
 						padding: .5rem;
 						padding-bottom:1rem;
-						.transition(background-color 1s .5s);
+						.transition(background-color 1s .5s, flex 0.250s linear);
+
+						&.collapsed {
+							flex: 0;
+							overflow: hidden;
+							padding:0;
+						}
 					}
 
 
@@ -380,7 +400,7 @@ textarea {
 					}
 
 					 .col3 ol {
-						font-size: .7rem;
+						font-size: 1rem;
 						padding-left: 1rem;
 						margin:0;
 					}
@@ -391,7 +411,7 @@ textarea {
 
 					 .col3 li h5 {
 						margin: 0;
-						font-size: 1rem;
+						font-size: 1em;
 						font-weight: normal;
 						cursor: pointer;
 						letter-spacing: .02em;
@@ -531,7 +551,7 @@ textarea {
 
 			.edit {
 				color:#ccc;
-				margin-left:1rem;
+				margin-left:1em;
 			}
 
 			blockquote {
@@ -581,7 +601,6 @@ textarea {
 		}
 	}
 }
-
 
 /* ==========================================================================
    Media Queries

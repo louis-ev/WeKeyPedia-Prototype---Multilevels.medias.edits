@@ -29,69 +29,128 @@ var waitForFinalEvent = (function () {
   };
 })();
 
+function getSelectedText() {
+    var text = "";
+    if (typeof window.getSelection != "undefined") {
+        text = window.getSelection().toString();
+    } else if (typeof document.selection != "undefined" && document.selection.type == "Text") {
+        text = document.selection.createRange().text;
+    }
+    return text;
+}
 
+function doSomethingWithSelectedText() {
+    var selectedText = getSelectedText();
+    if (selectedText) {
+        console.log("Got selected text " + selectedText);
+    }
+}
+
+function modeApercu () {
+
+	$("body").addClass("apercu");
+	$('.container').css("width", "100vw");
+	$(".colonne").each( function() {
+		if ( $(this).data('col') !== "" ) {
+			$that = $(this);
+			$colonnes = $that.find(".col3");
+
+			console.log( "$that.data('col')" + $that.data('col') );
+
+			var rubriqueamontrer = $colonnes.filter(function(){
+				console.log( "$(this).data('gotoniveau')" + $(this).data('gotoniveau') );
+				return $(this).data('gotoniveau').match( $that.data('col') )
+			});
+			$colonnes.addClass("collapsed");
+			rubriqueamontrer.removeClass("collapsed");
+		}
+	});
+}
+
+function modeColonne ( numColonneAMontrer ) {
+
+	$("body").removeClass("apercu");
+	var goCol = "niveau" + checkniveau(numColonneAMontrer);
+
+	$(".col3").removeClass("collapsed");
+	$('.container').css("width", "290vw");
+	setTimeout(	function() {
+		movecol( goCol );
+	}, 1400 );
+
+}
+
+// gogo colonne cliquées
+var movecol = function (gotoniveau) {
+
+	var newColonne = $('.colonne[data-col=' + gotoniveau + ']');
+
+	// l'objectif est de centrer sur la colonne
+	// il faut donc trouver le scrollLeft qui prendra en compte la largeur de la fenêtre et la position du centre, soit
+	var posCenterCol = newColonne.position().left + ($('.colonne[data-col=' + gotoniveau + ']').width() / 2);
+
+	var scrollLeftValue = $('#masque').scrollLeft() + posCenterCol - $(window).width() / 2;
+
+	// scrollLeftValue pour scrollLeft. Mais translateX du container dans le masque est plus fluide
+	//console.log( "scrollLeftValue : " + scrollLeftValue);
+	//var scrollLeftValue = $('#masque').scrollLeft() + $('.colonne[data-col=' + gotoniveau + ']').offset().left - 0.05*$(window).width();
+
+	// position de la colonne concernée dans l'espace
+	var moveColValue = posCenterCol - $(window).width() / 2;
+
+	// déplacement du container avec un translateX
+	$('#masque .container').transition({
+		x: -scrollLeftValue,
+		duration : 800,
+		easing: "snap",
+	});
+
+	$(".colonne").addClass("peripherie");
+	$('.colonne[data-col=' + gotoniveau + ']').removeClass("peripherie");
+	$('body').removeClass("niveau0 niveau1 niveau2");
+	$('body').addClass(gotoniveau);
+
+};
+
+var checkniveau = function (level) {
+	level = level < 0 ? 0 : level;
+	level = level > 2 ? 2 : level;
+	return level;
+}
 
 
 $(document).ready(
 
 	function(){
 
-/*
-		$('.container .colonne').eq(niveau).addClass('focused');
-		$('#toolbar').addClass('niveau'+niveau);
-		$('.container .rubrique .col3').addClass('focused');
-		$('.container .rubrique .col3:nth-child('+ 1 + ')').removeClass('focused');
-*/
-
-		$('body').addClass("niveau0");
 		$('#toolbar').css("opacity", 1);
 		$('.container').css("opacity", 1);
-		$('.container').css("width", "290vw");
-		setTimeout(	function() { movecol( "niveau" + checkniveau(0) ); }, 1400 );
-
-
-/*
-		$("#paperclipicon").click ( {
-			$("#popup").css("-webkit-transform", "translate(0,-400px)");
-		});
-*/
 
 		$('.rubrique > .col3').click ( function () {
-			movecol($(this).data("gotoniveau"));
+			movecol( $(this).data("gotoniveau") );
 		});
 
-		// gogo colonne cliquées
-		var movecol = function (gotoniveau) {
-			console.log(gotoniveau);
+		modeApercu ();
 
-			var newColonne = $('.colonne[data-col=' + gotoniveau + ']');
+		// click sur Wekeypedia (en attendant)
+		$('#bloclogo').click( function() {
+			console.log("modeColonne");
+			modeColonne ( "0" );
+		});
 
-			// l'objectif est de centrer sur la colonne
-			// il faut donc trouver le scrollLeft qui prendra en compte la largeur de la fenêtre et la position du centre, soit
-			var posCenterCol = newColonne.position().left + ($('.colonne[data-col=' + gotoniveau + ']').width() / 2);
+		$('.colonne').click( function(e) {
 
-			var scrollLeftValue = $('#masque').scrollLeft() + posCenterCol - $(window).width() / 2;
+				var $figure = $(e.target);
 
-			// scrollLeftValue pour scrollLeft. Mais translateX du container dans le masque est plus fluide
-			//console.log( "scrollLeftValue : " + scrollLeftValue);
-			//var scrollLeftValue = $('#masque').scrollLeft() + $('.colonne[data-col=' + gotoniveau + ']').offset().left - 0.05*$(window).width();
+				if ( $("body").hasClass("apercu") ) {
 
-			// position de la colonne concernée dans l'espace
-			var moveColValue = posCenterCol - $(window).width() / 2;
+					movecol( $(this).data("gotoniveau") );
 
-			// déplacement du container avec un translateX
-			$('#masque .container').transition({
-				x: -scrollLeftValue,
-				duration : 800,
-				easing: "snap",
-			});
+				}
 
-			$(".colonne").addClass("peripherie");
-			$('.colonne[data-col=' + gotoniveau + ']').removeClass("peripherie");
-			$('body').removeClass("niveau0 niveau1 niveau2");
-			$('body').addClass(gotoniveau);
 
-		};
+		});
+
 
 		// si clique sur titre (id de l'élément à scroller)
 		var movetitre = function (selector) {
@@ -101,76 +160,100 @@ $(document).ready(
 			}, { duration: 800, queue: false });
 		};
 
-		$('.colonne p, .colonne h4').wrap('<div class="bloctext"></div>');
+		// bordure de navigation dans la colonne
+		{
+			$('.colonne p, .colonne h4').wrap('<div class="bloctext"></div>');
 
-		$('.colonne p, .colonne h4').append("<span class='edit'><small>edit</small></span>");
+			$('.colonne p, .colonne h4').append("<span class='edit'><small>edit</small></span>");
 
-		// bordure gauche-droite
-		$('<div class="border border-left"></div><div class="border border-right"></div>').insertAfter('.colonne p, .colonne h4');
-		// icone a cote du titre
-		$('<div class="gene"><img src="img/genealogy.svg" alt="glyphicons_008_film" width="" height="" /></div>').insertBefore('.inside h1');
-		// icone dans toolbar
-		$('#titrearticle').append('<div class="gene"><img src="img/genealogy.svg" alt="glyphicons_008_film" width="" height="" /></div>');
+			// bordure gauche-droite
+			$('<div class="border border-left"></div><div class="border border-right"></div>').insertAfter('.colonne p, .colonne h4');
+			// icone a cote du titre
+			$('<div class="gene"><img src="img/genealogy.svg" alt="glyphicons_008_film" width="" height="" /></div>').insertBefore('.inside h1');
+			// icone dans toolbar
+			$('#titrearticle').append('<div class="gene"><img src="img/genealogy.svg" alt="glyphicons_008_film" width="" height="" /></div>');
 
-		// au clique sur les bordures
-		$(".border-right").click(function() {
-			niveau += 1;
-			movecol( "niveau" + checkniveau(niveau) );
-			movetitre( $("h2[data-topic=" + "development" + checkniveau(niveau) + "]") );
-		});
-		$(".border-left").click(function() {
-			niveau -= 1;
-			movecol( "niveau" + checkniveau(niveau) );
-			movetitre( $("h2[data-topic=" + "development" + checkniveau(niveau) + "]") );
-		});
-
-		// toc
-		var counter = 0;
-		$('.colonne.simple h2').each(function() {
-			var refcounter = 'simple'+counter++;
-			$(this).attr('id', refcounter);
-			$('.rubrique .simple ol').append('<li><h5 data-goto="'+refcounter+'">'+$(this).text()+'</h5></li>');
-		});
-		counter = 0;
-		$('.colonne.moyen h2').each(function() {
-			var refcounter = 'moyen'+counter++;
-			$(this).attr('id', refcounter);
-			$('.rubrique .moyen ol').append('<li><h5 data-goto="'+refcounter+'">'+$(this).text()+'</h5></li>');
-		});
-		counter = 0;
-		$('.colonne.complex h2').each(function() {
-			var refcounter = 'complex'+counter++;
-			$(this).attr('id', refcounter);
-			$('.rubrique .complex ol').append('<li><h5 data-goto="'+refcounter+'">'+$(this).text()+'</h5></li>');
-		});
-
-		$('.rubrique ol h5').click(function () {
-			movetitre($(".colonne h2[id=" + $(this).data("goto") + "]"));
-		});
-
-		$('#masque').bind("scroll", function () {
-			var scrollduhaut = $('#masque').scrollTop();
-			if ( scrollduhaut < 80 ) {
-				$('#toolbar').removeClass("far");
-			} else {
-				$('#toolbar').addClass("far");
-			}
-			//articleProche(scollduhaut);
-			//$('.toolbar-fond')
-		});
-
-		var checkniveau = function (level) {
-			level = level < 0 ? 0 : level;
-			level = level > 2 ? 2 : level;
-			return level;
+			// au clique sur les bordures
+			$(".border-right").click(function() {
+				niveau += 1;
+				movecol( "niveau" + checkniveau(niveau) );
+				movetitre( $("h2[data-topic=" + "development" + checkniveau(niveau) + "]") );
+			});
+			$(".border-left").click(function() {
+				niveau -= 1;
+				movecol( "niveau" + checkniveau(niveau) );
+				movetitre( $("h2[data-topic=" + "development" + checkniveau(niveau) + "]") );
+			});
 		}
+
+		// création de rubriques
+		{
+			var counter = 0;
+			$('.colonne.simple h2').each(function() {
+				var refcounter = 'simple'+counter++;
+				$(this).attr('id', refcounter);
+				$('.rubrique .simple ol').append('<li><h5 data-goto="'+refcounter+'">'+$(this).text()+'</h5></li>');
+			});
+			counter = 0;
+			$('.colonne.moyen h2').each(function() {
+				var refcounter = 'moyen'+counter++;
+				$(this).attr('id', refcounter);
+				$('.rubrique .moyen ol').append('<li><h5 data-goto="'+refcounter+'">'+$(this).text()+'</h5></li>');
+			});
+			counter = 0;
+			$('.colonne.complex h2').each(function() {
+				var refcounter = 'complex'+counter++;
+				$(this).attr('id', refcounter);
+				$('.rubrique .complex ol').append('<li><h5 data-goto="'+refcounter+'">'+$(this).text()+'</h5></li>');
+			});
+
+			$('.rubrique ol h5').click(function () {
+				movetitre($(".colonne h2[id=" + $(this).data("goto") + "]"));
+			});
+		}
+
+
+		// état "far" du block du haut
+		{
+			$('#masque').bind("scroll", function () {
+				var scrollduhaut = $('#masque').scrollTop();
+				if ( scrollduhaut < 80 ) {
+					$('#toolbar').removeClass("far");
+				} else {
+					$('#toolbar').addClass("far");
+				}
+				//articleProche(scollduhaut);
+				//$('.toolbar-fond')
+			});
+		}
+
 
 		$(window).resize(function(){
 		    waitForFinalEvent(function(){
-				setTimeout(	function() { movecol( "niveau" + checkniveau(niveau) ); }, 1400 );
+				setTimeout(	function() {
+					movecol( niveau );
+				}, 1400 );
 		    }, 500, "resize");
 
 		});
+
+		// selected text
+		document.onmouseup = doSomethingWithSelectedText;
+		document.onkeyup = doSomethingWithSelectedText;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	}
 );

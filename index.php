@@ -18,7 +18,7 @@
 	<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 </head>
 
-<body>
+<body class="apercu">
 
 	<div class="toolbarcontainer">
 		<div class="fixed">
