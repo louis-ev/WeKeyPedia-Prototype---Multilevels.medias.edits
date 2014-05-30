@@ -167,9 +167,11 @@ body.apercu {
 					display: none;
 				}
 
-				h1 {
+				h2 {
 					display: inline-block;
 					margin-right:15px;
+					font-size: 2em;
+					margin: 0;
 					vertical-align: -webkit-baseline-middle;
 					font-family: "brandon-grotesque", Helvetica, sans-serif;
 					font-weight: 100;
@@ -309,7 +311,7 @@ body.apercu {
 		padding-left: 150px;
 		padding-right: 150px;
 		height: auto;
-		.transition(left 1s ease-out, opacity .6s .4s ease-out, width .6s .4s ease-in-out);
+		.transition(left 1s ease-out, opacity .6s .4s ease-out, width .6s ease-in-out);
 		display: flex;
 		flex-wrap: nowrap;
 		overflow-x: hidden;
@@ -356,18 +358,29 @@ body.apercu {
 						position: relative;
 						display: inline-block;
 						flex:1;
+						height: 100%;
+						max-height: 600px;
 						vertical-align: top;
 						border-top-style: solid;
 						border-top-width:2px;
 						margin-top:5px;
 						padding: .5rem;
 						padding-bottom:1rem;
-						.transition(background-color 1s .5s, flex 0.250s linear);
+						.transition(background-color 1s .5s, flex .5s 1s linear, height 1s 1s ease-out, opacity 1s 1s ease-out);
+
+						ol {
+							font-size: .8em;
+							padding-left: 1.2em;
+							margin:0;
+							min-width:200px;
+						}
 
 						&.collapsed {
-							flex: 0;
+							flex: 0.0001;
 							overflow: hidden;
+							height: 0;
 							padding:0;
+							opacity: 0;
 						}
 					}
 
@@ -399,12 +412,6 @@ body.apercu {
 						margin-right:0;
 					}
 
-					 .col3 ol {
-						font-size: 1rem;
-						padding-left: 1rem;
-						margin:0;
-					}
-
 					 .col3 li {
 						margin:0;
 					}
@@ -423,9 +430,11 @@ body.apercu {
 
 					.col3 > h5 {
 						top: -2em;
-						font-size: 1em;
+						font-size: 1.4em;
+						color: #333;
 						position: absolute;
 						margin: 0;
+						font-weight: normal;
 					}
 					.col3 .titrecol {
 						color:#ddd;
@@ -438,12 +447,15 @@ body.apercu {
 
 					.niveau0 & .col3.simple .titrecol, .col3.simple:hover .titrecol {
 						color:@csimple;
+						color: #333;
 					}
 					.niveau1 & .col3.moyen .titrecol, .col3.moyen:hover .titrecol {
 						color: rgba(160, 249, 242,1);
+						color: #333;
 					}
 					.niveau2 & .col3.complex .titrecol, .col3.complex:hover .titrecol {
 						color: rgba(252, 187, 154,1);
+						color: #333;
 					}
 				}
 
@@ -562,10 +574,10 @@ body.apercu {
 
 			 h1,  h2,  h3,  h4 {
 				width: 44%;
-				font-weight: 700;
+				font-weight: normal;
 				margin:auto;
 				margin-top: 1em;
-				margin-bottom:1em;
+				margin-bottom:3em;
 			}
 
 			h4 {

@@ -57,10 +57,11 @@ function modeApercu () {
 
 			console.log( "$that.data('col')" + $that.data('col') );
 
-			var rubriqueamontrer = $colonnes.filter(function(){
+			var rubriqueamontrer = $colonnes.filter( function() {
 				console.log( "$(this).data('gotoniveau')" + $(this).data('gotoniveau') );
 				return $(this).data('gotoniveau').match( $that.data('col') )
 			});
+
 			$colonnes.addClass("collapsed");
 			rubriqueamontrer.removeClass("collapsed");
 		}
@@ -70,12 +71,10 @@ function modeApercu () {
 function modeColonne ( numColonneAMontrer ) {
 
 	$("body").removeClass("apercu");
-	var goCol = "niveau" + checkniveau(numColonneAMontrer);
-
 	$(".col3").removeClass("collapsed");
 	$('.container').css("width", "290vw");
 	setTimeout(	function() {
-		movecol( goCol );
+		movecol( numColonneAMontrer );
 	}, 1400 );
 
 }
@@ -119,127 +118,136 @@ var checkniveau = function (level) {
 }
 
 
-$(document).ready(
+$(document).ready( function() {
 
-	function(){
+	$('#toolbar').css("opacity", 1);
+	$('.container').css("opacity", 1);
 
-		$('#toolbar').css("opacity", 1);
-		$('.container').css("opacity", 1);
+	modeApercu ();
 
-		$('.rubrique > .col3').click ( function () {
-			movecol( $(this).data("gotoniveau") );
+	// si clique sur titre (id de l'élément à scroller)
+	var movetitre = function (selector) {
+		// scroll du haut
+		$('#masque').animate({
+			scrollTop: $('#masque').scrollTop() + selector.offset().top - 80
+		}, { duration: 800, queue: false });
+	};
+
+	// bordure de navigation dans la colonne
+	{
+		$('.colonne p, .colonne h4').wrap('<div class="bloctext"></div>');
+
+		$('.colonne p, .colonne h4').append("<span class='edit'><small>edit</small></span>");
+
+		// bordure gauche-droite
+		$('<div class="border border-left"></div><div class="border border-right"></div>').insertAfter('.colonne p, .colonne h4');
+		// icone a cote du titre
+/* 		$('<div class="gene"><img src="img/genealogy.svg" alt="glyphicons_008_film" width="" height="" /></div>').insertBefore('.inside h1'); */
+		// icone dans toolbar
+		$('#titrearticle').append('<div class="gene"><img src="img/genealogy.svg" alt="glyphicons_008_film" width="" height="" /></div>');
+	}
+
+	// création de rubriques
+	{
+		var counter = 0;
+		$('.colonne.simple h2').each(function() {
+			var refcounter = 'simple'+counter++;
+			$(this).attr('id', refcounter);
+			$('.rubrique .simple ol').append('<li><h5 data-goto="'+refcounter+'">'+$(this).text()+'</h5></li>');
 		});
+		counter = 0;
+		$('.colonne.moyen h2').each(function() {
+			var refcounter = 'moyen'+counter++;
+			$(this).attr('id', refcounter);
+			$('.rubrique .moyen ol').append('<li><h5 data-goto="'+refcounter+'">'+$(this).text()+'</h5></li>');
+		});
+		counter = 0;
+		$('.colonne.complex h2').each(function() {
+			var refcounter = 'complex'+counter++;
+			$(this).attr('id', refcounter);
+			$('.rubrique .complex ol').append('<li><h5 data-goto="'+refcounter+'">'+$(this).text()+'</h5></li>');
+		});
+	}
 
-		modeApercu ();
+
+	// état "far" du block du haut
+	{
+		$('#masque').bind("scroll", function () {
+			var scrollduhaut = $('#masque').scrollTop();
+			if ( scrollduhaut < 80 ) {
+				$('#toolbar').removeClass("far");
+			} else {
+				$('#toolbar').addClass("far");
+			}
+			//articleProche(scollduhaut);
+			//$('.toolbar-fond')
+		});
+	}
+
+
+	$(window).resize(function(){
+	    waitForFinalEvent(function(){
+			setTimeout(	function() {
+				movecol( niveau );
+			}, 1400 );
+	    }, 500, "resize");
+
+	});
+
+
+
+	/************************************************ click events ************************************************/
+
+	// selected text
+	document.onmouseup = doSomethingWithSelectedText;
+	document.onkeyup = doSomethingWithSelectedText;
+
+	$('body').click( function(e) {
 
 		// click sur Wekeypedia (en attendant)
-		$('#bloclogo').click( function() {
-			console.log("modeColonne");
-			modeColonne ( "0" );
-		});
+		var $figure = $(e.target);
+		console.log($figure);
 
-		$('.colonne').click( function(e) {
+		if ( $("body").hasClass("apercu") ) {
+			var getCol = $figure.closest(".colonne").data("col");
+			console.log("getCol : " + getCol);
+			modeColonne ( getCol );
+		} else
 
-				var $figure = $(e.target);
+		if ( $figure.is('#bloclogo h2') ) {
+			console.log("plop");
+			modeColonne ( "niveau0" );
+		} else
 
-				if ( $("body").hasClass("apercu") ) {
+		// click d'une colonne de rubrique : changement de col
+		if ( $figure.is(".col3>h5") ) {
+			console.log(".col3>h5");
+			movecol( $figure.closest(".col3").data("gotoniveau") );
+		} else
 
-					movecol( $(this).data("gotoniveau") );
+		// click sur élément d'une rubrique
+		if ( $figure.is($('.rubrique ol h5')) ) {
+			console.log(".rubrique ol h5");
+			if ( !$("body").hasClass("apercu") ) {
+				movecol( $figure.closest(".col3").data("gotoniveau") );
+			}
+			movetitre( $(".colonne h2[id=" + $figure.data("goto") + "]") );
+		} else
 
-				}
+		// au click sur les bordures
+		if ( $figure.is($(".border-right")) ) {
+			niveau += 1;
+			movecol( "niveau" + checkniveau(niveau) );
+			movetitre( $("h2[data-topic=" + "development" + checkniveau(niveau) + "]") );
+		} else
 
-
-		});
-
-
-		// si clique sur titre (id de l'élément à scroller)
-		var movetitre = function (selector) {
-			// scroll du haut
-			$('#masque').animate({
-				scrollTop: $('#masque').scrollTop() + selector.offset().top - 80
-			}, { duration: 800, queue: false });
-		};
-
-		// bordure de navigation dans la colonne
-		{
-			$('.colonne p, .colonne h4').wrap('<div class="bloctext"></div>');
-
-			$('.colonne p, .colonne h4').append("<span class='edit'><small>edit</small></span>");
-
-			// bordure gauche-droite
-			$('<div class="border border-left"></div><div class="border border-right"></div>').insertAfter('.colonne p, .colonne h4');
-			// icone a cote du titre
-			$('<div class="gene"><img src="img/genealogy.svg" alt="glyphicons_008_film" width="" height="" /></div>').insertBefore('.inside h1');
-			// icone dans toolbar
-			$('#titrearticle').append('<div class="gene"><img src="img/genealogy.svg" alt="glyphicons_008_film" width="" height="" /></div>');
-
-			// au clique sur les bordures
-			$(".border-right").click(function() {
-				niveau += 1;
-				movecol( "niveau" + checkniveau(niveau) );
-				movetitre( $("h2[data-topic=" + "development" + checkniveau(niveau) + "]") );
-			});
-			$(".border-left").click(function() {
-				niveau -= 1;
-				movecol( "niveau" + checkniveau(niveau) );
-				movetitre( $("h2[data-topic=" + "development" + checkniveau(niveau) + "]") );
-			});
-		}
-
-		// création de rubriques
-		{
-			var counter = 0;
-			$('.colonne.simple h2').each(function() {
-				var refcounter = 'simple'+counter++;
-				$(this).attr('id', refcounter);
-				$('.rubrique .simple ol').append('<li><h5 data-goto="'+refcounter+'">'+$(this).text()+'</h5></li>');
-			});
-			counter = 0;
-			$('.colonne.moyen h2').each(function() {
-				var refcounter = 'moyen'+counter++;
-				$(this).attr('id', refcounter);
-				$('.rubrique .moyen ol').append('<li><h5 data-goto="'+refcounter+'">'+$(this).text()+'</h5></li>');
-			});
-			counter = 0;
-			$('.colonne.complex h2').each(function() {
-				var refcounter = 'complex'+counter++;
-				$(this).attr('id', refcounter);
-				$('.rubrique .complex ol').append('<li><h5 data-goto="'+refcounter+'">'+$(this).text()+'</h5></li>');
-			});
-
-			$('.rubrique ol h5').click(function () {
-				movetitre($(".colonne h2[id=" + $(this).data("goto") + "]"));
-			});
+		if ( $figure.is($(".border-left")) ) {
+			niveau -= 1;
+			movecol( "niveau" + checkniveau(niveau) );
+			movetitre( $("h2[data-topic=" + "development" + checkniveau(niveau) + "]") );
 		}
 
 
-		// état "far" du block du haut
-		{
-			$('#masque').bind("scroll", function () {
-				var scrollduhaut = $('#masque').scrollTop();
-				if ( scrollduhaut < 80 ) {
-					$('#toolbar').removeClass("far");
-				} else {
-					$('#toolbar').addClass("far");
-				}
-				//articleProche(scollduhaut);
-				//$('.toolbar-fond')
-			});
-		}
-
-
-		$(window).resize(function(){
-		    waitForFinalEvent(function(){
-				setTimeout(	function() {
-					movecol( niveau );
-				}, 1400 );
-		    }, 500, "resize");
-
-		});
-
-		// selected text
-		document.onmouseup = doSomethingWithSelectedText;
-		document.onkeyup = doSomethingWithSelectedText;
 
 
 
@@ -247,13 +255,7 @@ $(document).ready(
 
 
 
+	});
 
 
-
-
-
-
-
-
-	}
-);
+});

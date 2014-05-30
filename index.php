@@ -25,7 +25,7 @@
        	 	<div class="" id="toolbar">
 					<div id="bloclogo">
 						<img src="img/logo-13.png" alt="logo-wekeypedzia-06" id="logo" />
-						<h1>Wekeypedia</h1>
+						<h2>Wekeypedia</h2>
 					</div>
 
 					<div id="titrearticle">
