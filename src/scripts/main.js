@@ -245,7 +245,21 @@ $(document).ready( function() {
 		// icone dans toolbar
 		$('#titrearticle').append('<div class="gene"><img src="images/genealogy.svg" alt="glyphicons_008_film" width="" height="" /></div>');
 		// ajouter les champs de commentaire
-		$('<div class="comments"><div class="submit"><textarea class="nom"></textarea><textarea class="texte"></textarea><button class="send"></button></div></div>').insertAfter('.colonne p, .colonne h4');
+		$('<div class="comments"><div class="submit"><h5>Comments</h5><textarea class="nom"></textarea><textarea class="texte"></textarea><button class="send"></button></div></div>').insertAfter('.colonne p, .colonne h4');
+	}
+
+
+	// titre "difficulté en haut de la colonne
+	{
+		$(".colonne").each( function () {
+			$this = $(this);
+			var niveauN = $this.data("col");
+			var difficulte = $this.find(".col3[data-gotoniveau=" + niveauN + "]").find("h5.titrecol").text();
+			$this.find(".inside").before("<h5 class='titreTopCol + " + niveauN + "'>" + difficulte + "</h5>");
+		});
+
+
+
 	}
 
 	// création de rubriques

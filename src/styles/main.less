@@ -100,7 +100,6 @@ body.apercu {
 	font-size:.7em;
 
 
-
 }
 
 // contenu fixé en haut de page
@@ -330,6 +329,38 @@ body.apercu {
 			background-color: transparent !important;
 			.transition(background-color .5s .5s ease-out, opacity .5s ease-out, );
 
+			.titreTopCol {
+
+				margin: 0;
+				margin-bottom: 10px;
+				font-size: 2em;
+				font-weight: normal;
+				text-align: center;
+				height: 2em;
+				transition: height 1s;
+
+				&.niveau0 {
+					color: @csimple;
+				}
+				&.niveau1 {
+					color: @cmoyen;
+				}
+				&.niveau2 {
+					color: @ccomplex;
+				}
+
+				body:not(.apercu) & {
+					height: 0;
+					overflow: hidden;
+				}
+
+			}
+
+			body.apercu & {
+				cursor: pointer;
+			}
+
+
 			.inside {
 
 			    width: 95%;
@@ -365,15 +396,16 @@ body.apercu {
 						max-height: 600px;
 						vertical-align: top;
 						border-top-style: solid;
-						border-top-width:2px;
+						border-top-width: 3px;
 						margin-top:5px;
-						padding: .5rem;
-						padding-bottom:1rem;
+						padding: 10px;
+						padding-left: 15px;
+						padding-bottom:10px;
 						.transition(background-color 1s .5s, flex .5s 1s linear, height 1s 1s ease-out, opacity 1s 1s ease-out);
 
 						ol {
 							font-size: .8em;
-							padding-left: 1.2em;
+							padding-left: 15px;
 							margin:0;
 							min-width:100px;
 						}
@@ -433,7 +465,8 @@ body.apercu {
 
 					.col3 > h5 {
 						top: -2em;
-						font-size: 1.4em;
+						left: 0;
+						font-size: 1.2em;
 						color: #333;
 						position: absolute;
 						margin: 0;
