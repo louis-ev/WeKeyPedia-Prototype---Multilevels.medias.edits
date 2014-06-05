@@ -137,6 +137,7 @@ body.apercu {
 	width: 100%;
 	font-size: 1rem;
 	z-index: 0;
+	overflow-x:hidden;
 	transition: -webkit-transform .1s ease-out;
 	transition: transform .1s ease-out;
 
@@ -167,14 +168,15 @@ body.apercu {
 	}
 
 	&.away {
-		.translate ( 0, -45px);
+		.translate ( 0, -40px);
 		transition: -webkit-transform 0s ease-out;
 		transition: transform 0s ease-out;
 	}
 
 	#toolbar {
 		width: 85%;
-		height: 100%;
+		height: 90%;
+		height: ~"calc(100% - 5px)";
 		margin: auto;
 		position: relative;
 
@@ -286,6 +288,7 @@ body.apercu {
 		z-index:-1;
 		display: -webkit-flex;
 		display: flex;
+
 		.transition (opacity .3s .5s);
 
 		.colonnetoolbar {
@@ -295,6 +298,8 @@ body.apercu {
 				width: 95%;
 				margin: auto;
 				border-bottom: 5px solid #eee;
+				-webkit-box-shadow: 0 10px 30px 0 rgba(141,141,141,.8);
+				box-shadow: 0 10px 30px 0 rgba(141,141,141,.8);
 			}
 
 			&.facile {
@@ -393,7 +398,7 @@ body.apercu {
 	width:100vw;
 	height:100vh;
 	position: absolute;
-	padding-top: 65px;
+	padding-top: 60px;
 	z-index: 1;
 
 	.container {
@@ -549,7 +554,7 @@ body.apercu {
 				border-color: @csimple;
 
 				h5 {
-					color: @csimple;
+					color: darken(@csimple, 20%);;
 				}
 
 				.niveau0 & {
@@ -560,7 +565,7 @@ body.apercu {
 				border-color: @cmoyen;
 
 				h5 {
-					color: @cmoyen;
+					color: darken(@cmoyen, 20%);;
 				}
 
 				.niveau1 & {
@@ -571,7 +576,7 @@ body.apercu {
 				border-color: @ccomplex;
 
 				h5 {
-					color: @ccomplex;
+					color: darken(@ccomplex, 20%);;
 				}
 				.niveau2 & {
 					background-color: rgba(252, 187, 154,.2);
@@ -686,12 +691,15 @@ body.apercu {
 			.submit {
 				textarea {
 					width: 100%;
+					height: 2em;
 
 				}
 				.send {
-					width: 25px;
-					height: 25px;
-					background-color: #ccc;
+					width: 2em;
+					height: 2em;
+					background-color: #eee;
+					border:5px solid #fff;
+					border-radius: 3px;
 
 				}
 			}
@@ -705,7 +713,7 @@ body.apercu {
 		//background-color: @colorlight;
 
 		.titreTopCol {
-			color: @color;
+			color: darken(@color, 20%);;
 		}
 		.inside {
 

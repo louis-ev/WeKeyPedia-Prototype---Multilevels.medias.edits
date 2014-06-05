@@ -300,7 +300,7 @@ $(document).ready( function() {
 			} else {
 
 				// calculer la direction du scroll et la vitesse
-				console.log("delta : " + (pscrollduhaut - scrollduhaut) );
+				//console.log("delta : " + (pscrollduhaut - scrollduhaut) );
 
 				var deltascroll = (pscrollduhaut - scrollduhaut);
 
