@@ -3,3 +3,11 @@ Thumbs.db
 
 node_modules
 src/bower_components
+
+dist/index.html
+
+dist/index.html
+
+dist/scripts/main.js
+
+dist/styles/main.css

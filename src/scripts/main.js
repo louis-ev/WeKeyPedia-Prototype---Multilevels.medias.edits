@@ -50,7 +50,6 @@ function doSomethingWithSelectedText() {
 function modeApercu () {
 
 	$("body").addClass("apercu");
-	$('.container').css("width", "100vw");
 	$(".colonne").each( function() {
 		if ( $(this).data('col') !== "" ) {
 			$that = $(this);
@@ -73,7 +72,6 @@ function modeColonne ( numColonneAMontrer ) {
 
 	$("body").removeClass("apercu");
 	$(".col3").removeClass("collapsed");
-	$('.container').css("width", "290vw");
 	setTimeout(	function() {
 		movecol( numColonneAMontrer );
 	}, 1400 );
@@ -99,7 +97,7 @@ var movecol = function (gotoniveau) {
 	var moveColValue = posCenterCol - $(window).width() / 2;
 
 	// déplacement du container avec un translateX
-	$('#masque .container').transition({
+	$('#masque .container, #toolbar-fond').transition({
 		x: -scrollLeftValue,
 		duration : 800,
 		easing: "snap",
@@ -138,7 +136,7 @@ function reconstructCommentaires ( commentData ) {
 
 		var commentField = $('.colonne[data-col=' + difficulte + ']').find( '.bloctext[data-para="' + paragraphe + '"] .comments' );
 
-		var constructionCommentaire = '<div class="commentaire" data-id="' + id + '" data-auteur="' + auteur + '"><div class="auteur">' + auteur + '</div><div class="texte">' + texte + '</div></div>';
+		var constructionCommentaire = '<div class="commentaire" data-id="' + id + '" data-auteur="' + auteur + '"><div class="commentContainer"><div class="auteur">' + auteur + '</div><div class="texte">' + texte + '</div></div></div>';
 
 		console.log( "%c constructionCommentaire : " + constructionCommentaire, 'background: #eee; color: #09606F');
 
@@ -224,7 +222,7 @@ $(document).ready( function() {
 	var movetitre = function (selector) {
 		// scroll du haut
 		$('#masque').animate({
-			scrollTop: $('#masque').scrollTop() + selector.offset().top - 80
+			scrollTop: $('#masque').scrollTop() + selector.offset().top - 25
 		}, { duration: 800, queue: false });
 	};
 
@@ -239,9 +237,9 @@ $(document).ready( function() {
 		});
 
 		// bordure gauche-droite
-		$('<div class="border border-left"></div><div class="border border-right"></div>').insertAfter('.colonne p, .colonne h4');
+//		$('<div class="border border-left"></div><div class="border border-right"></div>').insertAfter('.colonne p, .colonne h4');
 		// icone a cote du titre
-/* 		$('<div class="gene"><img src="img/genealogy.svg" alt="glyphicons_008_film" width="" height="" /></div>').insertBefore('.inside h1'); */
+// 		$('<div class="gene"><img src="img/genealogy.svg" alt="glyphicons_008_film" width="" height="" /></div>').insertBefore('.inside h1');
 		// icone dans toolbar
 		$('#titrearticle').append('<div class="gene"><img src="images/genealogy.svg" alt="glyphicons_008_film" width="" height="" /></div>');
 		// ajouter les champs de commentaire
@@ -255,7 +253,7 @@ $(document).ready( function() {
 			$this = $(this);
 			var niveauN = $this.data("col");
 			var difficulte = $this.find(".col3[data-gotoniveau=" + niveauN + "]").find("h5.titrecol").text();
-			$this.find(".inside").before("<h5 class='titreTopCol + " + niveauN + "'>" + difficulte + "</h5>");
+			$this.find(".inside").before("<h5 class='titreTopCol " + niveauN + "'>" + difficulte + "</h5>");
 		});
 
 
@@ -287,13 +285,39 @@ $(document).ready( function() {
 
 	// état "far" du block du haut
 	{
+		var pscrollduhaut = 0;
+
 		$('#masque').bind("scroll", function () {
+
 			var scrollduhaut = $('#masque').scrollTop();
-			if ( scrollduhaut < 80 ) {
-				$('#toolbar').removeClass("far");
+
+			// état far ou pas de la bar du haut
+			if ( scrollduhaut < 75 ) {
+
+				$('.toolbarcontainer').removeClass("far away");
+
+
 			} else {
-				$('#toolbar').addClass("far");
+
+				// calculer la direction du scroll et la vitesse
+				console.log("delta : " + (pscrollduhaut - scrollduhaut) );
+
+				var deltascroll = (pscrollduhaut - scrollduhaut);
+
+				if (deltascroll < 0) {
+					$('.toolbarcontainer').addClass("away");
+				}
+
+				if (deltascroll > 10) {
+					$('.toolbarcontainer').removeClass("away");
+				}
+
+				pscrollduhaut = scrollduhaut;
+
+				$('.toolbarcontainer').addClass("far");
+
 			}
+
 			//articleProche(scollduhaut);
 			//$('.toolbar-fond')
 		});
@@ -340,17 +364,28 @@ $(document).ready( function() {
 
 		// click sur Wekeypedia (en attendant)
 		var $figure = $(e.target);
+		var quelNiveauN = $figure.closest(".colonne").data("col");
 		console.log($figure);
 
+		// si en mode apercu, un click sur une colonne passe en mode
 		if ( $("body").hasClass("apercu") ) {
 			var getCol = $figure.closest(".colonne").data("col");
 			console.log("getCol : " + getCol);
-			modeColonne ( getCol );
+			if ( getCol !== null ) {
+				modeColonne ( getCol );
+			}
 		} else
 
+		// click sur Wekeypedia : retour à l'apercu
 		if ( $figure.is('#bloclogo h2') ) {
 			console.log("plop");
-			modeColonne ( "niveau0" );
+			modeApercu ();
+		} else
+
+		// click sur une autre colonne, non consultée
+		if ( quelNiveauN !== $("body").attr("class") && quelNiveauN !== undefined ) {
+			console.log("colonne inside");
+			movecol( quelNiveauN );
 		} else
 
 		// click d'une colonne de rubrique : changement de col
@@ -372,12 +407,14 @@ $(document).ready( function() {
 		if ( $figure.is($(".border-right")) ) {
 			niveau += 1;
 			movecol( "niveau" + checkniveau(niveau) );
+			// placeholder
 			movetitre( $("h2[data-topic=" + "development" + checkniveau(niveau) + "]") );
 		} else
 
 		if ( $figure.is($(".border-left")) ) {
 			niveau -= 1;
 			movecol( "niveau" + checkniveau(niveau) );
+			// placeholder
 			movetitre( $("h2[data-topic=" + "development" + checkniveau(niveau) + "]") );
 		} else
 
