@@ -74,7 +74,7 @@ function modeColonne ( numColonneAMontrer ) {
 	$(".col3").removeClass("collapsed");
 	setTimeout(	function() {
 		movecol( numColonneAMontrer );
-	}, 1400 );
+	}, 500 );
 
 }
 
@@ -90,7 +90,10 @@ var movecol = function (gotoniveau) {
 	var scrollLeftValue = $('#masque').scrollLeft() + posCenterCol - $(window).width() / 2;
 
 	// scrollLeftValue pour scrollLeft. Mais translateX du container dans le masque est plus fluide
-	//console.log( "scrollLeftValue : " + scrollLeftValue);
+
+	console.log( "$('.colonne[data-col=' + " + gotoniveau + " + ']').width() : " + $('.colonne[data-col=' + gotoniveau + ']').width() + " — scrollLeftValue : " + scrollLeftValue + "— $('.colonne[data-col=' + " +  gotoniveau + " + ']').css('width') : " + $('.colonne[data-col=' + gotoniveau + ']').css('width') + "— $('.colonne[data-col=' + " +  gotoniveau + " + ']').prop('style').width : " + $('.colonnetoolbar').width() );
+
+
 	//var scrollLeftValue = $('#masque').scrollLeft() + $('.colonne[data-col=' + gotoniveau + ']').offset().left - 0.05*$(window).width();
 
 	// position de la colonne concernée dans l'espace
@@ -99,7 +102,7 @@ var movecol = function (gotoniveau) {
 	// déplacement du container avec un translateX
 	$('#masque .container, #toolbar-fond').transition({
 		x: -scrollLeftValue,
-		duration : 800,
+		duration : 400,
 		easing: "snap",
 	});
 
@@ -134,9 +137,9 @@ function reconstructCommentaires ( commentData ) {
 		var difficulte = comments.position[0].diff;
 		var paragraphe = comments.position[0].para;
 
-		var commentField = $('.colonne[data-col=' + difficulte + ']').find( '.bloctext[data-para="' + paragraphe + '"] .comments' );
+		var commentField = $('.colonne[data-col=' + difficulte + ']').find( '.comments' );
 
-		var constructionCommentaire = '<div class="commentaire" data-id="' + id + '" data-auteur="' + auteur + '"><div class="commentContainer"><div class="auteur">' + auteur + '</div><div class="texte">' + texte + '</div></div></div>';
+		var constructionCommentaire = '<div class="commentaire" data-id="' + id + '" data-auteur="' + auteur + '" data-paragraphe="' + paragraphe + '"><div class="commentContainer"><div class="auteur">' + auteur + '</div><div class="texte">' + texte + '</div></div></div>';
 
 		console.log( "%c constructionCommentaire : " + constructionCommentaire, 'background: #eee; color: #09606F');
 
@@ -148,6 +151,12 @@ function reconstructCommentaires ( commentData ) {
 		}
 
 	}
+
+	$(".openComments").each( function () {
+
+
+
+	});
 
 	//console.log("dataArray");
 	//console.log(dataArray);
@@ -230,9 +239,12 @@ $(document).ready( function() {
 	{
 		$(".colonne").each( function () {
 			var counter = 0;
+			$(this).find('h1,h2,h3').each( function () {
+				$(this).wrap('<div class="bloctitre"></div>');
+			});
 			$(this).find('p, h4').each( function () {
 				counter += 1;
-				$(this).wrap('<div class="bloctext" data-para="' + counter + '"></div>');
+				$(this).wrap('<div class="bloctext" data-para="' + counter + '"><div class="texte"></div></div>');
 			});
 		});
 
@@ -243,7 +255,7 @@ $(document).ready( function() {
 		// icone dans toolbar
 		$('#titrearticle').append('<div class="gene"><img src="images/genealogy.svg" alt="glyphicons_008_film" width="" height="" /></div>');
 		// ajouter les champs de commentaire
-		$('<div class="comments"><div class="submit"><h5>Comments</h5><textarea class="nom"></textarea><textarea class="texte"></textarea><button class="send"></button></div></div>').insertAfter('.colonne p, .colonne h4');
+		$('<div class="comments closed"><button class="openComments"><div class="commentContainer">+</div></button><div class="submit"><h5>Comments</h5><textarea class="nom"></textarea><textarea class="texte"></textarea><button class="send"></button></div></div>').insertAfter('.colonne .inside article');
 	}
 
 
@@ -416,6 +428,10 @@ $(document).ready( function() {
 			movecol( "niveau" + checkniveau(niveau) );
 			// placeholder
 			movetitre( $("h2[data-topic=" + "development" + checkniveau(niveau) + "]") );
+		} else
+
+		if ( $figure.is($(".commentContainer")) ) {
+			$figure.closest(".colonne").toggleClass("commenting");
 		} else
 
 		if ( $figure.is($(".send")) ) {

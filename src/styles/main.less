@@ -110,7 +110,6 @@ body.apercu {
 	font-size:.4em;
 
 	#toolbar-fond {
-		width: 100vw !important;
 		opacity: 0;
 	}
 	.container {
@@ -237,7 +236,6 @@ body.apercu {
 			top:-80px;
 			position: absolute;
 			left: 28%;
-			width:44%;
 			padding-top: 5px;
 			/* margin-top:1em; */
 		}
@@ -398,7 +396,7 @@ body.apercu {
 	width:100vw;
 	height:100vh;
 	position: absolute;
-	padding-top: 60px;
+	margin-top: 60px;
 	z-index: 1;
 
 	.container {
@@ -408,7 +406,7 @@ body.apercu {
 		padding-left: 150px;
 		padding-right: 150px;
 		height: auto;
-		.transition(left 1s ease-out, opacity .6s .4s ease-out, width .6s ease-in-out);
+		.transition(left 1s ease-out, opacity .6s .4s ease-out, width .4s ease-out);
 		display: flex;
 		flex-wrap: nowrap;
 		overflow-x: hidden;
@@ -449,6 +447,7 @@ body.apercu {
 
 	.inside {
 
+		position: relative;
 	    width: 95%;
 	    background-color: #fff;
 	    margin: auto;
@@ -457,6 +456,12 @@ body.apercu {
 		border-top: 5px solid #fff;
 		-webkit-box-shadow: 0 10px 30px 0 rgba(141,141,141,.4);
 		box-shadow: 0 10px 30px 0 rgba(141,141,141,.4);
+
+		article {
+		 	width: 44%;
+		 	margin-left: ~"calc( (100% - 44%)/2 )";
+		 	.transition(margin-left .3s ease-out);
+		}
 
 		.gene {
 		    float: right; margin-right: 28%;
@@ -468,8 +473,6 @@ body.apercu {
 
 		.rubrique {
 
-			width: 44%;
-			margin:auto;
 			display: flex;
 			align-items: baseline;
 			margin-top: 50px;
@@ -586,29 +589,38 @@ body.apercu {
 
 		}
 
+		.bloctitre {
+
+		}
+
 		.bloctext {
-			background-color: #eee;
+
 			background-color: transparent;
 			position: relative;
-			.transition(background-color 1s .5s);
+			margin: auto;
+			.transition(background-color 1s .5s, width .4s ease-out);
 
-
-			p {
-				width: 44%;
-				margin: auto;
+			.texte {
+				width:100%;
+				.transition(width .4s ease-out);
 			}
 
 		}
 
 		.blocimage {
-			float:left;
-			margin-left:10%;
-			width: 100%;
-			img {
-			 	width: 44%;
 
+			img {
+				display: block;
+				max-width:100%;
 			}
 		}
+
+		.comments {
+			left: 110%;
+			left: ~"calc(100% + 20px)";
+			.transition(left .4s ease-out, width .4s ease-out);
+		}
+
 
 		.edit {
 			color:#ccc;
@@ -622,7 +634,6 @@ body.apercu {
 		}
 
 		 h1,  h2,  h3,  h4 {
-			width: 44%;
 			font-weight: normal;
 			margin:auto;
 			margin-top: 1em;
@@ -641,11 +652,6 @@ body.apercu {
 			height:100%;
 			z-index: 1;
 		}
-		.bloctext {
-			&:hover > .border {
-				width:10px;
-			}
-		}
 
 		.border-left {
 			left: -10px;
@@ -661,22 +667,58 @@ body.apercu {
 
 		.comments {
 			position: absolute;
-			top: 0;
+			top:490px;
 			left: 79%;
-			width: 15%;
+			width: 3em;
 			height:auto;
+			height: 2em;
+			overflow: hidden;
+
+			&.closed {
+			}
+
+			.openComments {
+
+				position: relative;
+				float:left;
+				width: 3em;
+				height: 2em;
+				margin: 0;
+				padding: 0;
+				border: .5em solid transparent;
+				border-left: .5em solid #fff;
+				border-right: 0;
+				border-bottom: 0 solid #fff;
+				overflow: visible;
+
+				.commentContainer {
+					position: absolute;
+					bottom:0;
+					text-align: center;
+					width: 100%;
+					margin: 0;
+					font-weight: bold;
+					font-size: 1.8em;
+				}
+			}
 
 			.commentaire {
 				background-color: #eee;
 				padding: .5em;
 				margin-bottom: .5em;
-				border: 15px solid transparent;
-				border-left: 15px solid white;
-				border-bottom: 0px solid white;
+				margin-left: 3em;
+
+				&:nth-child(2) {
+					border: 2em solid transparent;
+					border-left: 2em solid white;
+					border-bottom: 0px solid white;
+					margin-left: 3em;
+					.commentContainer {
+							margin-top:-2em;
+					}
+				}
 
 				.commentContainer {
-
-					margin-top:-15px;
 
 					.auteur {
 						font-weight: normal;
@@ -726,6 +768,14 @@ body.apercu {
 		}
 
 		.comments {
+
+			.openComments {
+				background-color: @colorlight;
+
+				.commentContainer {
+					color: darken(@color, 20%);;
+				}
+			}
 			.commentaire {
 				background-color: @colorlight;
 			}
@@ -744,8 +794,6 @@ body.apercu {
 	&.complex {
 		.loop( @ccomplex, @ccomplexlight );
 	}
-
-
 
 	&.simple {
 		.niveau0 & {
@@ -803,6 +851,43 @@ body.apercu {
 				cursor: e-resize;
 			}
 		}
+	}
+
+	&.commenting {
+
+		@margin: (100% - 74%)/2;
+
+		.inside article {
+			margin-left: @margin;
+		}
+
+		.comments {
+			width: 30%;
+			width: ~"calc( 100% - @{margin}*2 + 44%))";
+			left: 55%;
+			left:  ~"calc( @{margin} + 44%)";
+			margin-left:0;
+			height:auto;
+			overflow:hidden;
+
+			.openComments {
+				margin-left: -3em;
+			}
+
+			.commentaire {
+				margin-left: 2em;
+
+				&:nth-child(2) {
+					margin-left: 0em;
+				}
+			}
+
+			.submit {
+				margin-left: 2em;
+			}
+		}
+
+
 	}
 }
 
